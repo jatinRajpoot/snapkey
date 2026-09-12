@@ -1,7 +1,7 @@
 {
   "name": "snapkey",
   "productName": "Snapkey",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Keyboard-first screenshot capture and annotation for the desktop.",
   "main": "src/main/main.js",
   "author": "Snapkey",
