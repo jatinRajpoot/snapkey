@@ -448,6 +448,12 @@ app.whenReady().then(async () => {
 
   createMainWindow();
   warmUp();
+
+  // Look for an update once at startup. This only checks — the user still
+  // chooses whether to download and install it.
+  if (updates.state().status !== 'unsupported') {
+    updates.check();
+  }
 });
 
 app.on('second-instance', () => {
