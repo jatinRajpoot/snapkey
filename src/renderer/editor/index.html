@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; img-src data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self';"
+    />
+    <title>Snapkey Editor</title>
+    <link rel="stylesheet" href="/src/renderer/shared/theme.css" />
+    <link rel="stylesheet" href="/src/renderer/shared/toolbar.css" />
+    <link rel="stylesheet" href="/src/renderer/editor/editor.css" />
+  </head>
+  <body class="editor-body">
+    <header class="titlebar">
+      <div class="titlebar-left">
+        <span class="brand">Snapkey</span>
+        <span class="pill" id="dims">—</span>
+        <span class="pill" id="sourcePill" hidden></span>
+      </div>
+      <div class="titlebar-right">
+        <button class="btn ghost sm" id="btnSettings" type="button" title="Settings">Settings</button>
+        <button class="btn ghost sm" id="btnHelp" type="button" title="Keyboard shortcuts  ·  ?">
+          Shortcuts <span class="kbd">?</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="canvas"></canvas>
+      </div>
+
+      <aside class="inspector" id="inspector">
+        <section>
+          <h2>Annotation</h2>
+          <div class="inspector-hint" id="inspectorHint">Pick a tool to start annotating.</div>
+          <div id="toolbarHost"></div>
+        </section>
+
+        <section>
+          <h2>Actions</h2>
+          <div class="action-list">
+            <button class="action" id="actCopy" type="button">
+              <span class="action-main">
+                <span class="action-label">Copy to clipboard</span>
+                <span class="action-sub">Enter</span>
+              </span>
+              <span class="kbd">↵</span>
+            </button>
+            <button class="action" id="actSave" type="button">
+              <span class="action-main">
+                <span class="action-label">Save as PNG…</span>
+                <span class="action-sub" id="saveSub">Ctrl + S</span>
+              </span>
+              <span class="kbd">Ctrl S</span>
+            </button>
+            <button class="action" id="actSaveCopy" type="button">
+              <span class="action-main">
+                <span class="action-label">Save a copy</span>
+                <span class="action-sub">Keep the original file untouched</span>
+              </span>
+              <span class="kbd">Ctrl ⇧ S</span>
+            </button>
+          </div>
+        </section>
+
+        <section>
+          <h2>Canvas</h2>
+          <div class="action-list">
+            <button class="action" id="actFit" type="button">
+              <span class="action-main">
+                <span class="action-label">Fit to window</span>
+              </span>
+              <span class="kbd">Ctrl 0</span>
+            </button>
+            <button class="action" id="actActual" type="button">
+              <span class="action-main">
+                <span class="action-label">Actual size</span>
+              </span>
+              <span class="kbd">Ctrl 1</span>
+            </button>
+            <button class="action danger" id="actClear" type="button">
+              <span class="action-main">
+                <span class="action-label">Clear all annotations</span>
+              </span>
+              <span class="kbd">Ctrl ⇧ ⌫</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="stat-section">
+          <h2>Details</h2>
+          <dl class="stats">
+            <div><dt>Annotations</dt><dd id="statCount">0</dd></div>
+            <div><dt>Cursor</dt><dd id="statCursor">—</dd></div>
+            <div><dt>Zoom</dt><dd id="statZoom">100%</dd></div>
+          </dl>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="statusbar">
+      <div class="status-left" id="statusLeft">Ready</div>
+      <div class="status-right">
+        <span class="kbd">Space</span><span class="status-hint">temporarily pan</span>
+        <span class="kbd">Tab</span><span class="status-hint">cycle tools</span>
+        <span class="kbd">Esc</span><span class="status-hint">close</span>
+      </div>
+    </footer>
+
+    <div class="help-overlay" id="helpOverlay" hidden>
+      <div class="help-card" role="dialog" aria-label="Keyboard shortcuts">
+        <header>
+          <h2>Keyboard shortcuts</h2>
+          <button class="btn ghost icon" id="helpClose" type="button" aria-label="Close">✕</button>
+        </header>
+        <div class="help-grid" id="helpGrid"></div>
+        <footer>
+          <button class="btn primary" id="helpDone" type="button">Got it</button>
+        </footer>
+      </div>
+    </div>
+
+    <div class="toast-stack" id="toasts" aria-live="polite"></div>
+
+    <script type="module" src="/src/renderer/editor/editor.js"></script>
+  </body>
+</html>

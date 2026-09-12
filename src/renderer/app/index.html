@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; img-src data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self';"
+    />
+    <title>Snapkey</title>
+    <link rel="stylesheet" href="/src/renderer/shared/theme.css" />
+    <link rel="stylesheet" href="/src/renderer/app/app.css" />
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <nav class="sidebar">
+        <div class="sidebar-brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div class="brand-text">
+            <span class="brand-name">Snapkey</span>
+            <span class="brand-sub">Screenshot studio</span>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="nav-item" data-route="capture" type="button">
+            <span class="nav-icon" data-icon="sparkle"></span>
+            <span>Capture</span>
+          </button>
+          <button class="nav-item" data-route="library" type="button">
+            <span class="nav-icon" data-icon="image"></span>
+            <span>Library</span>
+            <span class="nav-count" id="libCount"></span>
+          </button>
+        </div>
+
+        <div class="nav-label">Preferences</div>
+        <div class="nav-group">
+          <button class="nav-item" data-route="shortcuts" type="button">
+            <span class="nav-icon" data-icon="keyboard"></span>
+            <span>Shortcuts</span>
+          </button>
+          <button class="nav-item" data-route="editor" type="button">
+            <span class="nav-icon" data-icon="pen"></span>
+            <span>Editor</span>
+          </button>
+          <button class="nav-item" data-route="saving" type="button">
+            <span class="nav-icon" data-icon="folder"></span>
+            <span>Saving</span>
+          </button>
+          <button class="nav-item" data-route="about" type="button">
+            <span class="nav-icon" data-icon="info"></span>
+            <span>About</span>
+          </button>
+        </div>
+
+        <div class="sidebar-foot">
+          <span class="pill" id="shortcutHealth">Checking…</span>
+        </div>
+      </nav>
+
+      <main class="content" id="content"></main>
+    </div>
+
+    <div class="toast-stack" id="toasts" aria-live="polite"></div>
+    <script type="module" src="/src/renderer/app/app.js"></script>
+  </body>
+</html>

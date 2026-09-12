@@ -1,0 +1,355 @@
+/* The overlay: a frozen screenshot, a dimming scrim, and a bright cut-out. */
+
+.overlay-body {
+  background: #000;
+  cursor: crosshair;
+  overflow: hidden;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+.frozen {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* In annotation mode the live canvas replaces the frozen bitmap entirely. */
+.live {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  pointer-events: none;
+}
+
+body.annotating .live {
+  display: block;
+}
+
+body.annotating .frozen,
+body.annotating .scrim,
+body.annotating .cutout,
+body.annotating .handles {
+  display: none;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 8, 14, 0.55);
+  backdrop-filter: saturate(0.75);
+  -webkit-backdrop-filter: saturate(0.75);
+}
+
+/* Four panes leave a genuinely transparent hole, so the live desktop shows
+   through instead of a lighter rectangle drawn on top of a dark one. */
+.cutout {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cutout::before,
+.cutout::after {
+  content: '';
+  position: absolute;
+  background: #000;
+  opacity: 0;
+}
+
+.handles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.handle {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 4px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+
+.handle.edge-n,
+.handle.edge-s {
+  cursor: ns-resize;
+}
+
+.handle.edge-e,
+.handle.edge-w {
+  cursor: ew-resize;
+}
+
+.handle.edge-nw,
+.handle.edge-se {
+  cursor: nwse-resize;
+}
+
+.handle.edge-ne,
+.handle.edge-sw {
+  cursor: nesw-resize;
+}
+
+/* ------------------------------------------------------------------- chrome */
+
+.chrome {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.chrome > * {
+  pointer-events: auto;
+}
+
+.size-badge {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  padding: 0 4px 0 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  white-space: nowrap;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.size-badge .sizer {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, var(--accent-bright), #2ee6c4);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22) inset;
+  cursor: nwse-resize;
+}
+
+.hint-strip {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: fade-up var(--dur) var(--ease);
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.hint .kbd {
+  height: 19px;
+}
+
+.mode-badge {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 99px;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mode-badge .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-bright);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+  animation: pulse 1.8s var(--ease) infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.82);
+  }
+}
+
+.mouse-coords {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.42);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------- magnifier */
+
+.zoom-panel {
+  position: absolute;
+  width: 112px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+  pointer-events: none;
+}
+
+.zoom-panel canvas {
+  display: block;
+  width: 112px;
+  height: 112px;
+  image-rendering: pixelated;
+}
+
+.zoom-coords {
+  padding: 3px 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ------------------------------------------------------------ text editing */
+
+.text-editor {
+  position: fixed;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.text-editor textarea {
+  min-width: 160px;
+  max-width: 60vw;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(8, 10, 16, 0.72);
+  border: 1px dashed rgba(255, 255, 255, 0.55);
+  box-shadow: var(--shadow-md);
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.3;
+  resize: none;
+  overflow: hidden;
+  white-space: pre;
+  pointer-events: auto;
+  caret-color: var(--accent-bright);
+}
+
+.text-editor textarea::placeholder {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* ------------------------------------------------------------------ toasts */
+
+.toast-stack {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 15px;
+  border-radius: var(--radius-md);
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  font-size: 13px;
+  font-weight: 500;
+  animation: fade-up var(--dur) var(--ease);
+}
+
+.toast.success {
+  border-color: rgba(50, 215, 75, 0.4);
+}
+
+.toast.error {
+  border-color: rgba(255, 69, 58, 0.45);
+}
+
+.toast .icon {
+  color: var(--accent-bright);
+}
+
+.toast.success .icon {
+  color: var(--success);
+}
+
+.toast.error .icon {
+  color: var(--danger);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* --------------------------------------------------------------- selection */
+
+.selection-outline {
+  position: absolute;
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.9), 0 0 0 2px rgba(0, 0, 0, 0.55);
+}
+
+body.selecting {
+  cursor: crosshair;
+}
+
+body.moving {
+  cursor: move;
+}

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+
+# Local run scratch files
+_shot-*.png
+_shot.js
+_diag.js
+run-*.log

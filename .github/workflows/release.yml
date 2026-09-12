@@ -1,0 +1,34 @@
+name: Release
+
+# Bumping the version and pushing the tag is the whole release process:
+#   npm run release:patch
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    # NSIS and portable targets cannot be cross-built from Linux without Wine.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # Do not pass --ignore-scripts: the postinstall step generates the icons
+      # that electron-builder packs.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and publish
+        run: npm run dist -- --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

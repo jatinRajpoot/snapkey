@@ -1,0 +1,287 @@
+/* Snapkey design system — one token set, three surfaces (overlay, editor, app). */
+
+:root {
+  --bg-base: #0b0d14;
+  --bg-raised: #12151f;
+  --bg-overlay: rgba(18, 21, 31, 0.86);
+  --bg-inset: rgba(255, 255, 255, 0.04);
+  --bg-hover: rgba(255, 255, 255, 0.08);
+  --bg-active: rgba(255, 255, 255, 0.13);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-accent: rgba(120, 140, 255, 0.55);
+
+  --text-primary: #f2f4fb;
+  --text-secondary: #a7adc4;
+  --text-muted: #6f7691;
+  --text-inverse: #0b0d14;
+
+  --accent: #6f7bff;
+  --accent-bright: #8b95ff;
+  --accent-soft: rgba(111, 123, 255, 0.16);
+  --accent-ring: rgba(111, 123, 255, 0.42);
+  --success: #32d74b;
+  --warning: #ffd60a;
+  --danger: #ff453a;
+
+  --radius-sm: 7px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.4);
+
+  --font-ui: system-ui, -apple-system, 'Segoe UI Variable Text', 'Segoe UI', Inter, sans-serif;
+  --font-mono: 'Cascadia Code', 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+
+  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --dur-fast: 110ms;
+  --dur: 180ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  overflow: hidden;
+  user-select: none;
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+  background-clip: content-box;
+}
+
+/* ---------------------------------------------------------------- controls */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn[disabled] {
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.btn.primary {
+  background: linear-gradient(180deg, var(--accent-bright), var(--accent));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, var(--shadow-sm);
+}
+
+.btn.primary:hover {
+  filter: brightness(1.07);
+}
+
+.btn.ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.btn.ghost:hover {
+  background: var(--bg-hover);
+}
+
+.btn.danger {
+  color: var(--danger);
+}
+
+.btn.danger:hover {
+  background: rgba(255, 69, 58, 0.14);
+  border-color: rgba(255, 69, 58, 0.35);
+}
+
+.btn.icon {
+  width: 34px;
+  padding: 0;
+}
+
+.btn.sm {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--border-subtle);
+  border-bottom-width: 2px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field > label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+.input,
+.select {
+  height: 34px;
+  padding: 0 11px;
+  border-radius: var(--radius-md);
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.input:hover,
+.select:hover {
+  border-color: var(--border-strong);
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--border-accent);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-subtle);
+  border: 0;
+  margin: 0;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 99px;
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.pill.warn {
+  background: rgba(255, 214, 10, 0.12);
+  border-color: rgba(255, 214, 10, 0.3);
+  color: var(--warning);
+}
+
+.pill.ok {
+  background: rgba(50, 215, 75, 0.12);
+  border-color: rgba(50, 215, 75, 0.3);
+  color: var(--success);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}

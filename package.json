@@ -1,0 +1,67 @@
+{
+  "name": "snapkey",
+  "productName": "Snapkey",
+  "version": "1.0.0",
+  "description": "Keyboard-first screenshot capture and annotation for the desktop.",
+  "main": "src/main/main.js",
+  "author": "Snapkey",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jatinRajpoot/snapkey.git"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "icons": "node scripts/make-icons.js",
+    "postinstall": "node scripts/make-icons.js",
+    "dist": "electron-builder --win",
+    "pack": "electron-builder --win --dir",
+    "release:patch": "npm version patch && git push --follow-tags",
+    "release:minor": "npm version minor && git push --follow-tags",
+    "release:major": "npm version major && git push --follow-tags"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
+  },
+  "devDependencies": {
+    "electron": "^34.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "dev.snapkey.app",
+    "productName": "Snapkey",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "jatinRajpoot",
+        "repo": "snapkey",
+        "releaseType": "release"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "artifactName": "${productName}-${version}-Setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-Portable.${ext}"
+    }
+  }
+}
